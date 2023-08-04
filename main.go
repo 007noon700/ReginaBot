@@ -17,7 +17,7 @@ var errInvalidFormat = errors.New("invalid format")
 var attendeeRole = "1136878110646743170"
 
 func main() {
-	discord, err := discordgo.New("Bot MTEzNjgxMDAyMDc4NTM2MDk5OQ.GFsmm5.FmiDtK3qAmmVrvyvdyI-L4hYRvuzrFdkZ9hiNY")
+	discord, err := discordgo.New("Bot <TOKEN>")
 	if err != nil {
 		log.Fatal(err)
 	}
