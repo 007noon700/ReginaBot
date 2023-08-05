@@ -46,6 +46,7 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	// Respond to messages
 	switch {
 	case strings.HasPrefix(message.Content, "$dumphim"):
+		//emojis, how do they work??
 		discord.ChannelMessageSend(message.ChannelID, ":dumphim:")
 	case strings.HasPrefix(message.Content, "$talkshit"):
 		discord.ChannelMessageSend(message.ChannelID, "post fit")
@@ -64,25 +65,27 @@ func createColorRole(message *discordgo.MessageCreate, discord *discordgo.Sessio
 	fmt.Println(c)
 	_, e := ParseHexColorFast(c)
 
-	if e != nil {
+	if e != nil { //if the color is a bad hex code throw this error
 		discord.ChannelMessageSend(message.ChannelID, "Sorry, I couldn't find that color. Please try again, using a hex code (starts with #)")
 		fmt.Println("fail 1")
 		return
 	}
+	//the role params struct needs a decimal INT for some reason, so we need to convert it here.
 	cInt, convErr := strconv.ParseInt(c[1:], 16, 64)
 	cIntPoi := int(cInt)
-	if convErr != nil {
+	if convErr != nil { //if the int parser fails for some godforsaken reason
 		discord.ChannelMessageSend(message.ChannelID, "Sorry, I had issues creating that color. Please try again or contact @synanasthesia")
 		fmt.Println("fail 2")
 		return
 	}
-	newRole := discordgo.RoleParams{Name: c, Color: &cIntPoi}
+	newRole := discordgo.RoleParams{Name: c, Color: &cIntPoi} //this creates the role parameters - currently, the name is set to just the color string and color is obvious.
 	role, er := discord.GuildRoleCreate(message.GuildID, &newRole)
 	if er != nil {
 		discord.ChannelMessageSend(message.ChannelID, "Sorry, I couldn't create a role with that color. Please try again or contact @synanasthesia")
 		fmt.Println("fail 3")
 		return
 	}
+	//somewhere here we either need to remove old roles or reorder the roles.
 	discord.GuildMemberRoleAdd(message.GuildID, message.Author.ID, role.ID)
 	discord.ChannelMessageSend(message.ChannelID, "Done! How's that?")
 }
