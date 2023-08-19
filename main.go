@@ -18,6 +18,7 @@ var attendeeRole = "1136878110646743170"
 
 func main() {
 	discord, err := discordgo.New("Bot <TOKEN>")
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,8 +59,10 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		sendImage(discord, message, "tacoBell.jpg")
 	case strings.HasPrefix(message.Content, "$wednesday"):
 		weekday := time.Now().Weekday()
+		discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")			
+
 		if int(weekday) == 3 {
-			sendImage(discord, message, "wednesday.gif")	
+			discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")			
 		} else {
 			discord.ChannelMessageSend(message.ChannelID, "it's not Wednesday numbnuts it is " + weekday.String())
 		}
