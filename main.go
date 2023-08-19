@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"strconv"
 	"strings"
-
+	"time"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -18,6 +18,7 @@ var attendeeRole = "1136878110646743170"
 
 func main() {
 	discord, err := discordgo.New("Bot <TOKEN>")
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,18 +47,49 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	// Respond to messages
 	switch {
 	case strings.HasPrefix(message.Content, "$dumphim"):
-		//emojis, how do they work??
-		discord.ChannelMessageSend(message.ChannelID, ":dumphim:")
+		// send "\:dumphim:" as yourself to get the emoji id needed for the bot to send the emoji
+		discord.ChannelMessageSend(message.ChannelID, "<:dumphim:1136426428565569567>")
 	case strings.HasPrefix(message.Content, "$talkshit"):
 		discord.ChannelMessageSend(message.ChannelID, "post fit")
 	case strings.HasPrefix(message.Content, "$skillissue"):
 		discord.ChannelMessageSend(message.ChannelID, "skill issue")
 	case strings.HasPrefix(message.Content, "$color"):
 		createColorRole(message, discord)
+	case strings.HasPrefix(message.Content, "$tacobell"):
+		sendImage(discord, message, "tacoBell.jpg")
+	case strings.HasPrefix(message.Content, "$wednesday"):
+		weekday := time.Now().Weekday()
+		if int(weekday) == 3 {
+			discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")			
+		} else {
+			discord.ChannelMessageSend(message.ChannelID, "it's not Wednesday numbnuts it is " + weekday.String())
+		}
+
 	case strings.HasPrefix(message.Content, "$rsvp"):
 		discord.GuildMemberRoleAdd(message.GuildID, message.Author.ID, attendeeRole)
 		discord.ChannelMessageSend(message.ChannelID, "Thanks, "+message.Author.Username+" for RSVPing to WWD24! Hope to see you there!")
 	}
+}
+
+// https://github.com/bwmarrin/discordgo/wiki/FAQ
+func sendImage(discord *discordgo.Session,  message *discordgo.MessageCreate, imageFilename string) {
+	//const attachment = new &discordgo.MessageAttachment('');
+	imageFilename = "images/" + imageFilename
+	f, err := os.Open(imageFilename)
+	if err != nil {
+		return 
+	}
+	defer f.Close()
+
+	ms := &discordgo.MessageSend{
+		Files: []*discordgo.File{
+			&discordgo.File{
+				Name:   imageFilename,
+				Reader: f,
+			},
+		},
+	}
+	discord.ChannelMessageSendComplex(message.ChannelID, ms)
 }
 
 func createColorRole(message *discordgo.MessageCreate, discord *discordgo.Session) {
