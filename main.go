@@ -62,7 +62,7 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	case strings.HasPrefix(message.Content, "$color"):
 		createColorRole(message, discord)
 	case strings.HasPrefix(message.Content, "$tacobell"):
-		sendImage(discord, message, "tacoBell.jpg")
+		sendImage(discord, message, "tacobell.png")
 	case strings.HasPrefix(message.Content, "$wednesday"):
 		weekday := time.Now().Weekday()
 		if int(weekday) == 3 {
