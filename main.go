@@ -59,8 +59,6 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		sendImage(discord, message, "tacoBell.jpg")
 	case strings.HasPrefix(message.Content, "$wednesday"):
 		weekday := time.Now().Weekday()
-		discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")			
-
 		if int(weekday) == 3 {
 			discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")			
 		} else {
