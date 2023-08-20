@@ -53,10 +53,16 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		discord.ChannelMessageSend(message.ChannelID, "post fit")
 	case strings.HasPrefix(message.Content, "$skillissue"):
 		discord.ChannelMessageSend(message.ChannelID, "skill issue")
+	case strings.HasPrefix(message.Content, "$dogepoint"):
+		discord.ChannelMessageSend(message.ChannelID, "<:dogekek:1135750882584182925>👉")
+	case message.Content == "$horse":
+		discord.ChannelMessageSend(message.ChannelID, "🐴")
+	case strings.HasPrefix(message.Content, "$horses"):
+		discord.ChannelMessageSend(message.ChannelID, "🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴")
 	case strings.HasPrefix(message.Content, "$color"):
 		createColorRole(message, discord)
 	case strings.HasPrefix(message.Content, "$tacobell"):
-		sendImage(discord, message, "tacoBell.jpg")
+		sendImage(discord, message, "tacobell.png")
 	case strings.HasPrefix(message.Content, "$wednesday"):
 		weekday := time.Now().Weekday()
 		if int(weekday) == 3 {
