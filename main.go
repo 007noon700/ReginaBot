@@ -31,8 +31,7 @@ func TimeIn(t time.Time, name string) (time.Time, error) {
 }
 
 func main() {
-	//discord, err := discordgo.New("Bot <TOKEN>")
-	discord, err := discordgo.New("Bot MTE0MjUxMTI1NDgwODgyNTk3Nw.Gy4fnF.xWD-S-4IwFUSgFRwwgkYWXzaqYVtnVbOEyz9B8")
+	discord, err := discordgo.New("Bot <TOKEN>")
 
 	if err != nil {
 		log.Fatal(err)
