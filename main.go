@@ -17,6 +17,19 @@ import (
 var errInvalidFormat = errors.New("invalid format")
 var attendeeRole = "1136878110646743170"
 
+// https://yourbasic.org/golang/time-change-convert-location-timezone/
+// TimeIn returns the time in UTC if the name is "" or "UTC".
+// It returns the local time if the name is "Local".
+// Otherwise, the name is taken to be a location name in
+// the IANA Time Zone database, such as "Africa/Lagos".
+func TimeIn(t time.Time, name string) (time.Time, error) {
+	loc, err := time.LoadLocation(name)
+	if err == nil {
+		t = t.In(loc)
+	}
+	return t, err
+}
+
 func main() {
 	discord, err := discordgo.New("Bot <TOKEN>")
 
@@ -55,7 +68,7 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	case strings.HasPrefix(message.Content, "$skillissue"):
 		discord.ChannelMessageSend(message.ChannelID, "skill issue")
 	case strings.HasPrefix(message.Content, "$dogepoint"):
-		discord.ChannelMessageSend(message.ChannelID, "<:dogekek:1135750882584182925>👉")
+		discord.ChannelMessageSend(message.ChannelID, "<:dogekek:1135750882584182925> 👉")
 	case message.Content == "$horse":
 		discord.ChannelMessageSend(message.ChannelID, "🐴")
 	case strings.HasPrefix(message.Content, "$horses"):
@@ -65,7 +78,9 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	case strings.HasPrefix(message.Content, "$tacobell"):
 		discord.ChannelMessageSend(message.ChannelID, "https://i.imgur.com/TkZbs3J.png")
 	case strings.HasPrefix(message.Content, "$wednesday"):
-		weekday := time.Now().Weekday()
+		// NYC supremacy
+		t, _ := TimeIn(time.Now(), "America/New_York")
+		weekday := t.Weekday()
 		if int(weekday) == 3 {
 			discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")
 		} else {
