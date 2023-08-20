@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -62,13 +63,13 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	case strings.HasPrefix(message.Content, "$color"):
 		createColorRole(message, discord)
 	case strings.HasPrefix(message.Content, "$tacobell"):
-		sendImage(discord, message, "tacobell.png")
+		discord.ChannelMessageSend(message.ChannelID, "https://i.imgur.com/TkZbs3J.png")
 	case strings.HasPrefix(message.Content, "$wednesday"):
 		weekday := time.Now().Weekday()
 		if int(weekday) == 3 {
-			discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")			
+			discord.ChannelMessageSend(message.ChannelID, "https://giphy.com/gifs/filmeditor-mean-girls-movie-3otPozZKy1ALqGLoVG")
 		} else {
-			discord.ChannelMessageSend(message.ChannelID, "it's not Wednesday numbnuts it is " + weekday.String())
+			discord.ChannelMessageSend(message.ChannelID, "it's not Wednesday numbnuts it is "+weekday.String())
 		}
 
 	case strings.HasPrefix(message.Content, "$rsvp"):
@@ -78,12 +79,12 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 }
 
 // https://github.com/bwmarrin/discordgo/wiki/FAQ
-func sendImage(discord *discordgo.Session,  message *discordgo.MessageCreate, imageFilename string) {
+func sendImage(discord *discordgo.Session, message *discordgo.MessageCreate, imageFilename string) {
 	//const attachment = new &discordgo.MessageAttachment('');
 	imageFilename = "images/" + imageFilename
 	f, err := os.Open(imageFilename)
 	if err != nil {
-		return 
+		return
 	}
 	defer f.Close()
 
