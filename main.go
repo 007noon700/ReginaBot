@@ -55,7 +55,8 @@ func helpMessage() (s string) {
 $color <hex code>: I'll set your color to <hex code> (example: #FFFFFF).
 $help: Make me repeat this message for some ungodly reason
 $rsvp: RSVP to WWD24!
-	
+
+$date: Get today's date
 $dogepoint: <:dogekek:1135750882584182925> 👉
 $dumphim: <:dumphim:1136426428565569567>
 $horse: 🐴
