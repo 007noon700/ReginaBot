@@ -65,6 +65,7 @@ $tacobell: I'll express my feelings about Taco Bell
 $talkshit: I'll say "post fit"
 $skillissue: I'll say "skill issue"
 $uck: Sometimes people get up to this I guess
+$waluigi <@user>: Get the waluigi of someone else (or get your own waluigi by not tagging anyone)
 $wednesday: If it's Wednesday I'll let you know
 $white: <:white:1136047355997720747>
 `
@@ -95,7 +96,6 @@ func dateMessage() (s string) {
 func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	// OK we don't want to spam so let's kind of sort these by funniest highest to lowest.
 	// and send only one per message (even if has two.)
-	content := message.Content
 	if strings.Contains(message.Content, "fetch") {
 		// Stop trying to make fetch happen
 		discord.ChannelMessageSend(message.ChannelID,
@@ -112,8 +112,6 @@ func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreat
 }
 
 func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
-
-	fmt.Println(message.Content)
 
 	// Ignore bot messaage
 	if message.Author.ID == discord.State.User.ID {
@@ -183,11 +181,16 @@ func waluigi(message *discordgo.MessageCreate, discord *discordgo.Session, token
 		url = message.Author.AvatarURL("")
 	} else {
 		// convert e.g. <@425544164365565962> to 425544164365565962
+		if len(tokens[1]) < 3 {
+			discord.ChannelMessageSend(message.ChannelID,
+				`Literally who are you even talking about? Type "$waluigi <@user> to get the waluigi of that user."`)
+			return
+		}
 		userId := tokens[1][2 : len(tokens[1])-1]
 		mentionedUser, err := discord.User(userId)
 		if err != nil {
 			discord.ChannelMessageSend(message.ChannelID,
-				"Literally who are you even talking about?")
+				`Literally who are you even talking about? Type "$waluigi <@user> to get the waluigi of that user."`)
 			return
 		}
 		url = mentionedUser.AvatarURL("")
