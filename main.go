@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/bwmarrin/discordgo"
 	"image/color"
 	"log"
 	"os"
@@ -11,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 var errInvalidFormat = errors.New("invalid format")
@@ -95,7 +96,6 @@ func dateMessage() (s string) {
 func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	// OK we don't want to spam so let's kind of sort these by funniest highest to lowest.
 	// and send only one per message (even if has two.)
-	content := message.Content
 	if strings.Contains(message.Content, "fetch") {
 		// Stop trying to make fetch happen
 		discord.ChannelMessageSend(message.ChannelID,
