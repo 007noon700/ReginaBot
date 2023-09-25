@@ -119,7 +119,7 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		return
 	}
 
-	if (len(message.Content) == 0) {
+	if len(message.Content) == 0 {
 		return
 	}
 
@@ -131,7 +131,6 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	}
 
 	tokens := strings.Fields(message.Content)
-
 
 	// Respond to messages
 	switch tokens[0] {
