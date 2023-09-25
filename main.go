@@ -119,6 +119,10 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		return
 	}
 
+	if (len(message.Content) == 0) {
+		return
+	}
+
 	// Don't bother with all the below switch logic if there isn't a $ in the front.
 	// Conversely, don't check for strings if there's maybe a command.
 	if message.Content[0:1] != "$" {
@@ -127,6 +131,7 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	}
 
 	tokens := strings.Fields(message.Content)
+
 
 	// Respond to messages
 	switch tokens[0] {
