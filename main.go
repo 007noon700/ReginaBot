@@ -36,7 +36,7 @@ func TimeIn(t time.Time, name string) (time.Time, error) {
 }
 
 func main() {
-	discord, err := discordgo.New("Bot <TOKEN>")
+	//discord, err := discordgo.New("Bot <TOKEN>")
 
 	if err != nil {
 		log.Fatal(err)
@@ -102,15 +102,16 @@ func dateMessage() (s string) {
 func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	// OK we don't want to spam so let's kind of sort these by funniest highest to lowest.
 	// and send only one per message (even if has two.)
-	if strings.Contains(message.Content, "fetch") {
+	msg := strings.ToLower(message.Content)
+	if strings.Contains(msg, "fetch") {
 		// Stop trying to make fetch happen
 		discord.ChannelMessageSend(message.ChannelID,
 			"https://tenor.com/view/fetch-mean-girls-gif-19691105")
-	} else if strings.Contains(message.Content, "how much") || strings.Contains(message.Content, "how many") {
+	} else if strings.Contains(msg, "how much") || strings.Contains(message.Content, "how many") {
 		// The limit does not exist
 		discord.ChannelMessageSend(message.ChannelID,
 			"https://tenor.com/view/mean-girls-karen-gif-9300840")
-	} else if strings.Contains(message.Content, "=") || strings.Contains(message.Content, "+") {
+	} else if strings.Contains(msg, "math") {
 		// You can't join mathletes. It's social suicide.
 		discord.ChannelMessageSend(message.ChannelID,
 			"https://y.yarn.co/ea1dd776-80ed-43fb-a53d-9e77520bf781_text.gif")
