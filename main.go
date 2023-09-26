@@ -3,7 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"image"
 	"image/color"
+
+	// "image/jpeg"
 	"log"
 	"os"
 	"os/signal"
@@ -12,6 +15,8 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+
+	"image/png"
 )
 
 var errInvalidFormat = errors.New("invalid format")
@@ -181,10 +186,7 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 // so far all this does is print the profile picture of either the message author
 // (if no one mentioned) or the user mentioned. I can't figure out how to invert stuff.
 func waluigi(message *discordgo.MessageCreate, discord *discordgo.Session, tokens []string) {
-	var url = ""
-	if len(tokens) == 1 {
-		url = message.Author.AvatarURL("")
-	} else {
+	if len(tokens) != 1 {
 		// convert e.g. <@425544164365565962> to 425544164365565962
 		if len(tokens[1]) < 3 {
 			discord.ChannelMessageSend(message.ChannelID,
@@ -198,10 +200,31 @@ func waluigi(message *discordgo.MessageCreate, discord *discordgo.Session, token
 				`Literally who are you even talking about? Type "$waluigi <@user> to get the waluigi of that user."`)
 			return
 		}
-		url = mentionedUser.AvatarURL("")
+		img, e := discord.UserAvatarDecode(mentionedUser)
+		if e != nil {
+			discord.ChannelMessageSend(message.ChannelID,
+				"idk why but i can't get that user's pfp")
+			return
+		}
+		wah := Invert(img)
+		f, err := os.Create("img.png")
+		if err != nil {
+			fmt.Println("image save failed")
+			return
+		}
+		defer f.Close()
+		if err = png.Encode(f, wah); err != nil {
+			fmt.Printf("failed to encode: %v", err)
+			return
+		}
+		file, errr := os.Open("img.png")
+		if errr != nil {
+			fmt.Println("image save failed")
+			return
+		}
+		discord.ChannelFileSend(message.ChannelID, "waluigi.png", file)
+		os.Remove("img.png")
 	}
-	discord.ChannelMessageSend(message.ChannelID, "Ok, just imagine this is in inverted colors.")
-	discord.ChannelMessageSend(message.ChannelID, url)
 }
 
 func createColorRole(message *discordgo.MessageCreate, discord *discordgo.Session, tokens []string) {
@@ -283,4 +306,17 @@ func ParseHexColorFast(s string) (c color.RGBA, err error) {
 	return
 }
 
-//token
+func Invert(img image.Image) *image.NRGBA {
+	dst := image.NewNRGBA(image.Rect(0, 0, img.Bounds().Dx(), img.Bounds().Dy()))
+	w := img.Bounds().Dx()
+	h := img.Bounds().Dy()
+	for y := 0; y < h; y++ {
+		for x := 0; x < w; x++ {
+			c := img.At(x, y)
+			r, g, b, a := c.RGBA()
+			wC := color.RGBA{R: uint8(255 - r), G: uint8(255 - g), B: uint8(255 - b), A: uint8(a)}
+			dst.Set(x, y, wC)
+		}
+	}
+	return dst
+}
