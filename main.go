@@ -36,7 +36,7 @@ func TimeIn(t time.Time, name string) (time.Time, error) {
 }
 
 func main() {
-	//discord, err := discordgo.New("Bot <TOKEN>")
+	discord, err := discordgo.New("Bot <TOKEN>")
 
 	if err != nil {
 		log.Fatal(err)
@@ -67,10 +67,12 @@ $dogepoint: <:dogekek:1135750882584182925> 👉
 $dumphim: <:dumphim:1136426428565569567>
 $horse: 🐴
 $horses: Several horses
-$tacobell: I'll express my feelings about Taco Bell
-$talkshit: I'll say "post fit"
+$limit: Talk about the limit
+$mathletes: Mathletes opinion
 $skillissue: I'll say "skill issue"
 $uck: Sometimes people get up to this I guess
+$tacobell: I'll express my feelings about Taco Bell
+$talkshit: I'll say "post fit"
 $waluigi <@user>: Get the waluigi of someone else (or get your own waluigi by not tagging anyone)
 $wednesday: If it's Wednesday I'll let you know
 $white: <:white:1136047355997720747>
@@ -107,14 +109,6 @@ func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreat
 		// Stop trying to make fetch happen
 		discord.ChannelMessageSend(message.ChannelID,
 			"https://tenor.com/view/fetch-mean-girls-gif-19691105")
-	} else if strings.Contains(msg, "how much") || strings.Contains(message.Content, "how many") {
-		// The limit does not exist
-		discord.ChannelMessageSend(message.ChannelID,
-			"https://tenor.com/view/mean-girls-karen-gif-9300840")
-	} else if strings.Contains(msg, "math") {
-		// You can't join mathletes. It's social suicide.
-		discord.ChannelMessageSend(message.ChannelID,
-			"https://y.yarn.co/ea1dd776-80ed-43fb-a53d-9e77520bf781_text.gif")
 	}
 }
 
@@ -162,15 +156,24 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	case "$horses":
 		discord.ChannelMessageSend(message.ChannelID,
 			"🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴🐴")
+	case "$limit":
+		// the limit does not exist
+		discord.ChannelMessageSend(message.ChannelID,
+			"https://tenor.com/view/mean-girls-karen-gif-9300840")
+	case "$mathletes":
+		// you can't join mathletes. it's social suicide.
+		discord.ChannelMessageSend(message.ChannelID,
+			"https://y.yarn.co/ea1dd776-80ed-43fb-a53d-9e77520bf781_text.gif")
+	case "$skillissue":
+		discord.ChannelMessageSend(message.ChannelID, "skill issue")
+	case "$uck":
+		// sucking dick and cock
+		discord.ChannelMessageSend(message.ChannelID,
+			"https://cdn.discordapp.com/attachments/1136094668136915066/1143333955555303568/image0.gif")
 	case "$tacobell":
 		discord.ChannelMessageSend(message.ChannelID, "https://i.imgur.com/TkZbs3J.png")
 	case "$talkshit":
 		discord.ChannelMessageSend(message.ChannelID, "post fit")
-	case "$skillissue":
-		discord.ChannelMessageSend(message.ChannelID, "skill issue")
-	case "$uck":
-		discord.ChannelMessageSend(message.ChannelID,
-			"https://cdn.discordapp.com/attachments/1136094668136915066/1143333955555303568/image0.gif")
 	case "$wednesday":
 		discord.ChannelMessageSend(message.ChannelID, wednesdayMessage())
 	case "$waluigi":
