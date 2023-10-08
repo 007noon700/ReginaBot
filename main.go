@@ -3,20 +3,16 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"image"
 	"image/color"
-
-	// "image/jpeg"
+	"image/png"
 	"log"
 	"os"
 	"os/signal"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/bwmarrin/discordgo"
-
-	"image/png"
 )
 
 var errInvalidFormat = errors.New("invalid format")
@@ -109,6 +105,16 @@ func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreat
 		// Stop trying to make fetch happen
 		discord.ChannelMessageSend(message.ChannelID,
 			"https://tenor.com/view/fetch-mean-girls-gif-19691105")
+	} else {
+		marxStrings := []string{"marx", "capital", "landlord", "rich", "big natural"}
+		for _, str := range marxStrings {
+			if strings.Contains(msg, str) {
+				discord.MessageReactionAdd(message.ChannelID, message.ID,
+					"marx:1159218841189101668")
+				return
+			}
+		}
+
 	}
 }
 
