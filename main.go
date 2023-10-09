@@ -106,7 +106,8 @@ func checkForStrings(discord *discordgo.Session, message *discordgo.MessageCreat
 		discord.ChannelMessageSend(message.ChannelID,
 			"https://tenor.com/view/fetch-mean-girls-gif-19691105")
 	} else {
-		marxStrings := []string{"marx", "capital", "landlord", "rich", "big natural"}
+		marxStrings := []string{"marx", "capital", "landlord", "rich", "big natural",
+			"communis", "comrade", "commie"}
 		for _, str := range marxStrings {
 			if strings.Contains(msg, str) {
 				discord.MessageReactionAdd(message.ChannelID, message.ID,
