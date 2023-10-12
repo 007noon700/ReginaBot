@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/bwmarrin/discordgo"
 	"image"
 	"image/color"
 	"image/png"
@@ -13,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 var errInvalidFormat = errors.New("invalid format")
@@ -250,6 +251,10 @@ func createColorRole(message *discordgo.MessageCreate, discord *discordgo.Sessio
 	}
 
 	c := tokens[1]
+	name := c
+	if len(tokens) > 2 {
+		name = tokens[2]
+	}
 	fmt.Println(c)
 	_, e := ParseHexColorFast(c)
 
@@ -268,7 +273,7 @@ func createColorRole(message *discordgo.MessageCreate, discord *discordgo.Sessio
 		fmt.Println("fail 2")
 		return
 	}
-	newRole := discordgo.RoleParams{Name: c, Color: &cIntPoi} //this creates the role parameters - currently, the name is set to just the color string and color is obvious.
+	newRole := discordgo.RoleParams{Name: name, Color: &cIntPoi} //this creates the role parameters - currently, the name is set to just the color string and color is obvious.
 	role, er := discord.GuildRoleCreate(message.GuildID, &newRole)
 	if er != nil {
 		discord.ChannelMessageSend(message.ChannelID,
@@ -276,9 +281,29 @@ func createColorRole(message *discordgo.MessageCreate, discord *discordgo.Sessio
 		fmt.Println("fail 3")
 		return
 	}
-	//somewhere here we either need to remove old roles or reorder the roles.
+	//removing the old color roles
+	roles := message.Member.Roles
+	for i := 0; i < len(roles); i++ {
+		if !SkipRole(roles[i]) {
+			discord.GuildMemberRoleRemove(message.GuildID, message.Author.ID, roles[i])
+		}
+	}
+
 	discord.GuildMemberRoleAdd(message.GuildID, message.Author.ID, role.ID)
 	discord.ChannelMessageSend(message.ChannelID, "Done! How's that?")
+}
+
+func SkipRole(role string) bool {
+	switch role {
+	case
+		"1135736420007415820",
+		attendeeRole,
+		"1135776062605893672",
+		"1137061973922676798",
+		"1136503988909514842":
+		return true
+	}
+	return false
 }
 
 // shout out to https://stackoverflow.com/questions/54197913/parse-hex-string-to-image-color
