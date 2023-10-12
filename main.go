@@ -55,7 +55,7 @@ func main() {
 
 func helpMessage() (s string) {
 	var message = `
-$color <hex code>: I'll set your color to <hex code> (example: #FFFFFF).
+$color <hex code> <name (OPTIONAL)>: I'll set your color to <hex code> (example: #FFFFFF).
 $help: Make me repeat this message for some ungodly reason
 $rsvp: RSVP to WWD24!
 
